@@ -1,9 +1,12 @@
+#this stage removes the need for git etc in further stages
+#this is a general stage used to get remote content required later
 FROM alpine as gitGetter
-    RUN apk --update add git less openssh \
+    RUN apk --update add git less curl openssh bash \
         && rm -rf /var/lib/apt/lists/* \
         && rm /var/cache/apk/*
     WORKDIR /git
     RUN git clone https://github.com/pschatzmann/openscad-kernel
+    RUN curl -sL https://deb.nodesource.com/setup_12.x
 
 FROM debian:stable-slim as Base
 LABEL maintainer="docker@donnellan.de"
@@ -14,7 +17,7 @@ LABEL maintainer="docker@donnellan.de"
             curl
 
 FROM Base as Node
-    RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+    RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
 FROM Node as Python
     RUN apt-get update \
@@ -29,7 +32,8 @@ From Python as Openscad
     ENV PATH /opt/conda/envs/beakerx/bin:$PATH
     RUN pip3 install jupyterlab 
     WORKDIR /opt
-    COPY --from=gitGetter /git/openscad-kernel .
+    COPY --from=gitGetter /git/openscad-kernel ./openscad-kernel/
+    run ls -laR /opt
     WORKDIR /opt/openscad-kernel
     RUN pip3 install .
     RUN python3 -m iopenscad.install
