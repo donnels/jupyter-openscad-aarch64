@@ -23,7 +23,8 @@ FROM Node as Python
     RUN apt-get update \
         && apt-get install -y \
             python3 python3-pip libffi-dev \
-            xvfb x11-utils nodejs
+            xvfb x11-utils nodejs \
+            pandoc
 
 From Python as Openscad
     RUN apt update \
