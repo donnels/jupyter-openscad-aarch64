@@ -24,7 +24,7 @@ FROM Node as Python
         && apt-get install -y \
             python3 python3-pip libffi-dev \
             xvfb x11-utils nodejs \
-            pandoc
+            pandoc texlive
 
 From Python as Openscad
     RUN apt update \
