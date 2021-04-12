@@ -1,6 +1,6 @@
 #this stage removes the need for git etc in further stages
 #this is a general stage used to get remote content required later
-FROM alpine as gitGetter
+FROM alpine as gitgetter
     RUN apk --update add git less curl openssh bash \
         && rm -rf /var/lib/apt/lists/* \
         && rm /var/cache/apk/*
@@ -8,7 +8,7 @@ FROM alpine as gitGetter
     RUN git clone https://github.com/pschatzmann/openscad-kernel
     RUN curl -sL https://deb.nodesource.com/setup_12.x
 
-FROM debian:stable-slim as Base
+FROM debian:stable-slim as base
 LABEL maintainer="docker@donnellan.de"
     USER root
     RUN mkdir -p /home/openscad
@@ -16,10 +16,10 @@ LABEL maintainer="docker@donnellan.de"
         && apt-get install -y \
             curl
 
-FROM Base as Node
+FROM base as node
     RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 
-FROM Node as Python
+FROM node as python
     RUN apt-get update \
         && apt-get install -y \
             python3 python3-pip libffi-dev \
@@ -27,7 +27,7 @@ FROM Node as Python
             pandoc \
             texlive-xetex texlive-fonts-recommended texlive-generic-recommended
 
-From Python as Openscad
+From python as openscad
     RUN apt update \
         && apt install -y \
             openscad
@@ -35,7 +35,7 @@ From Python as Openscad
     ENV DISPLAY :99
     RUN pip3 install jupyterlab 
     WORKDIR /opt
-    COPY --from=gitGetter /git/openscad-kernel ./openscad-kernel/
+    COPY --from=gitgetter /git/openscad-kernel ./openscad-kernel/
     run ls -laR /opt
     WORKDIR /opt/openscad-kernel
     RUN pip3 install .
@@ -45,5 +45,5 @@ From Python as Openscad
     WORKDIR /home/openscad
     RUN cp /opt/openscad-kernel/documentation/* /home/openscad/
 
-FROM Openscad
+FROM openscad
     CMD jupyter lab --allow-root --ip=0.0.0.0 --port=8888 --no-browser
