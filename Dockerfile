@@ -41,6 +41,7 @@ From python as openscad
     RUN pip3 install .
     RUN python3 -m iopenscad.install
     RUN jupyter labextension install jupyterlab-openscad-syntax-highlighting
+    RUN jupyter labextension install jupyterlab-viewer-3d
 #RUN jupyter labextension install jupyterlab-viewer-3d
     WORKDIR /home/openscad
     RUN cp /opt/openscad-kernel/documentation/* /home/openscad/
