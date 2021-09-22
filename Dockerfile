@@ -25,7 +25,7 @@ FROM node as python
             python3 python3-pip libffi-dev \
             xvfb x11-utils nodejs \
             pandoc \
-            texlive-xetex texlive-fonts-recommended texlive-generic-recommended
+            texlive-xetex texlive-fonts-recommended texlive
 
 From python as openscad
     RUN apt update \
