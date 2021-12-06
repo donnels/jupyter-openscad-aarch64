@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+    openscad-jupyter:
+      image: donnellans/openscad-jupyter:latest
+      container_name: openscad-jupyter
+      ports:
+        - "8880:8888"
+      restart: always
+      build: .
