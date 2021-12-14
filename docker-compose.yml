@@ -8,4 +8,4 @@ services:
       restart: always
       build: .
       volumes:
-      - .:/data:rw
+      - ./3d-projects:/home/openscad/data:rw
