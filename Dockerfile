@@ -6,6 +6,8 @@ FROM alpine as gitgetter
         && rm /var/cache/apk/*
     WORKDIR /git
     RUN git clone https://github.com/pschatzmann/openscad-kernel
+    #left this in in the hope of getting it done here... since it's short left it for now
+    #aim is to remove curl later on.
     RUN curl -sL https://deb.nodesource.com/setup_12.x
 
 FROM debian:stable-slim as base
@@ -41,7 +43,9 @@ From python as openscad
     RUN pip3 install .
     RUN python3 -m iopenscad.install
     RUN jupyter labextension install jupyterlab-openscad-syntax-highlighting
-#RUN jupyter labextension install jupyterlab-viewer-3d
+#not sure why I commented out the next line..let's see
+#seems to work on intel should test it again on arm
+    RUN jupyter labextension install jupyterlab-viewer-3d
     WORKDIR /home/openscad
     RUN cp /opt/openscad-kernel/documentation/* /home/openscad/
 
